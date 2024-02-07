@@ -15,9 +15,8 @@ def is_req_installed():
     with open(os.path.join(os.path.dirname(__file__), "requirements.txt"), 'r') as file:
         lines = file.readlines()
         for line in lines:
-            if not line:
-                if not find_spec(line):
-                    return False
+            if not line and not find_spec(line):
+                return False
 
     print(f"all dependencies for comfyui_segment_anything is installed")
     return True

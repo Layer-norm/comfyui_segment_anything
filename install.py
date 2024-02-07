@@ -10,8 +10,20 @@ def build_pip_install_cmds(args):
     else:
         return [sys.executable, '-m', 'pip', 'install'] + args
 
+def is_req_installed():
+    from importlib.util import find_spec
+    with open(os.path.join(os.path.dirname(__file__), "requirements.txt"), 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            if not line:
+                if not find_spec(line):
+                    return False
+
+    print(f"all dependencies for comfyui_segment_anything is installed")
+    return True
+
 def ensure_package():
-    if os.environ.get('COMFY_SAM_ENSURE_PACKAGES',None):
+    if not is_req_installed():
         cmds = build_pip_install_cmds(['-r', 'requirements.txt'])
         subprocess.run(cmds, cwd=custom_nodes_path)
 
